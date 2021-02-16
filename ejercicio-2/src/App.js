@@ -1,19 +1,29 @@
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { useCallback, useState } from "react";
 import "./App.css";
+import { Autocomplete } from "./components/Autocomplete";
+import { Markers } from "./components/Markers";
 
-// Coordinates of Barcelona
-const center = {
+const barcelona = {
 	lat: 41.3851,
 	lng: 2.1734,
 };
 
+const loaderOptions = {
+	googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+	libraries: ["places"],
+};
+
 const App = () => {
-	const { isLoaded, loadError } = useJsApiLoader({
-		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-	});
+	const { isLoaded, loadError } = useJsApiLoader(loaderOptions);
+
+	const [center, setCenter] = useState(barcelona);
+	const recenter = useCallback(location => {
+		setCenter(location);
+	}, []);
 
 	if (!isLoaded) {
-		return <span>loading...</span>;
+		return <span>Loading...</span>;
 	}
 
 	if (loadError) {
@@ -26,11 +36,11 @@ const App = () => {
 	}
 
 	return (
-		<GoogleMap
-			mapContainerClassName="map-container"
-			center={center}
-			zoom={12}
-		></GoogleMap>
+		<GoogleMap mapContainerClassName="map-container" center={center} zoom={12}>
+			<Autocomplete recenter={recenter} />
+
+			<Markers />
+		</GoogleMap>
 	);
 };
 
