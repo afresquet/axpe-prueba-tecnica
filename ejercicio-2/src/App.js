@@ -14,6 +14,10 @@ const loaderOptions = {
 	libraries: ["places"],
 };
 
+const mapOptions = {
+	disableDefaultUI: true,
+};
+
 const App = () => {
 	const { isLoaded, loadError } = useJsApiLoader(loaderOptions);
 
@@ -36,7 +40,12 @@ const App = () => {
 	}
 
 	return (
-		<GoogleMap mapContainerClassName="map-container" center={center} zoom={12}>
+		<GoogleMap
+			mapContainerClassName="map-container"
+			center={center}
+			zoom={12}
+			options={mapOptions}
+		>
 			<Autocomplete recenter={recenter} />
 
 			<Markers />
